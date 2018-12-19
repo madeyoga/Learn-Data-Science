@@ -1,10 +1,8 @@
 import numpy as np
 import pandas as pd
 
-world_cup = pd.read_csv('Datasets/World Cup 2018 Dataset.csv')
 results = pd.read_csv('Datasets/results.csv')
-
-print(world_cup.head())
+print("load Results...")
 print(results.head())
 
 ## filter year
@@ -12,8 +10,8 @@ year = []
 for row in results['date']:
     year.append(int(row[:4]))
 results['match_year'] = year
-results = results[results['match_year'] >= 1930]
-print(results.head())
+results = results[results['match_year'] >= 2014]
+print("Filter year: 2014+")
 
 ## Categoryin goal difference
 results['goal_difference'] = np.absolute(results['home_score'] - results['away_score'])
@@ -24,6 +22,7 @@ for i in range(len(results['goal_difference'])):
     else:
         gd_category.append('high')
 results['gd_category'] = gd_category
+print("Calculate Goal Difference: ")
 print(results.head())
 
 winners = []
@@ -35,7 +34,7 @@ for i in range(len(results['home_team'])):
     else:
         winners.append('Draw')
 results['winning_team'] = winners
-
+print("Get Winning Team: ")
 print(results.head())
 
 worldcup_teams = [
@@ -53,14 +52,9 @@ df_teams_home = results[results['home_team'].isin(worldcup_teams)]
 df_teams_away = results[results['away_team'].isin(worldcup_teams)]
 df_teams = pd.concat((df_teams_home, df_teams_away))
 df_teams.drop_duplicates()
-print(df_teams.count())
-print(df_teams.tail())
-
-##year = []
-##for row in df_teams['date']:
-##    year.append(int(row[:4]))
-##df_teams['match_year'] = year
-##df_teams = df_teams[df_teams.match_year >= 1998]
+# print(df_teams.count())
+print("Filter Team thats participate in World Cup 2018")
+print(df_teams.head())
 
 ## drop kolom yang tidak mempengaruhi hasil match
 df_teams = df_teams.drop(
@@ -77,6 +71,7 @@ df_teams = df_teams.drop(
     ],
     axis=1
 )
+print("Drop Columns that doesnt affect match outcomes")
 print(df_teams.head())
 
 ## BUILDING THE MODEL 
